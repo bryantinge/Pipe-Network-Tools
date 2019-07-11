@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang='en' dir='ltr'>
+
+  <head>
+    <meta charset='utf-8'>
+    <link rel='stylesheet' href='static/stylesheets/master.css'>
+    <link rel='icon' href='static/images/favicon.ico'>
+    {% if title %}
+    <title>{{ title }}</title>
+    {% else %}
+    <title>Pipe Network Tools</title>
+    {% endif %}
+  </head>
+
+  <body>
+    {% block content %}{% endblock %}
+  </body>
+
+</html>

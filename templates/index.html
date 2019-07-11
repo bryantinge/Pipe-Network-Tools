@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h1><a href="{{ url_for('index') }}">Pipe Network Tools</a></h1>
+
+    <div class='center-all'>
+
+      <div>
+        <form class='form-inline' action='' method='post' enctype='multipart/form-data'>
+          {{ form.hidden_tag() }}
+          <div>
+            {{ form.design_files.label(class='button-blue-left') }}{{ form.design_files(multiple='multiple') }}
+            {{ form.design_submit.label(class='button-green-right') }}{{ form.design_submit() }}
+          </div>
+          <div>
+            {{ form.velocity_files.label(class='button-blue-left') }}{{ form.velocity_files(multiple='multiple') }}
+            {{ form.velocity_submit.label(class='button-green-right') }}{{ form.velocity_submit() }}
+          </div>
+          <div>
+            {{ form.spread_files.label(class='button-blue-left') }}{{ form.spread_files(multiple='multiple') }}
+            {{ form.spread_submit.label(class='button-green-right') }}{{ form.spread_submit() }}
+          </div>
+        </form>
+      </div>
+
+      <h2>Directions</h2>
+
+      <ol class='list-directions'>
+        <li>Design pipe network in Hydraflow Storm Sewers.</li>
+        <li>Download custom report files below.</li>
+        <li>Export Storm Sewers data as a tab separated file using the appropriate report file.</li>
+        <li>Name exported file as a numerical series name. (Example: 100, 200, etc.)</li>
+        <li>Use buttons above to download a formatted excel file with all selected network files.</li>
+      </ol>
+
+      <h3>Hydraflow Storm Sewers Custom Reports</h3>
+
+      <div>
+        <button class='button-red' onclick="location.href='/design_report'">
+        Download Pipe Design Report
+        </button>
+        <button class='button-red' onclick="location.href='/velocity_report'">
+        Download Pipe Velocity Report
+        </button>
+        <button class='button-red' onclick="location.href='/spread_report'">
+        Download Gutter Spread Report
+        </button>
+      </div>
+
+    </div>
+
+{% endblock %}
