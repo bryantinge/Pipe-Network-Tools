@@ -1,39 +1,13 @@
-import os
 import io
 import re
-import csv
-import uuid
-import datetime
 import pandas as pd
-import openpyxl
-from pandas import ExcelWriter
 from openpyxl import load_workbook
-from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Font
+from openpyxl.styles import PatternFill, Alignment, Font
 from flask import send_file
+from utils import cell_border, set_border, set_format
 
 def main(s3, S3_BUCKET, s3_keys_csv, folder_name, spread_names):
-
-    #Create cell border style function
-    def cell_border(left, right, top, bottom):
-        border = Border(
-            left=Side(border_style=left), 
-            right=Side(border_style=right), 
-            top=Side(border_style=top), 
-            bottom=Side(border_style=bottom))
-        return border
-
-    #Set border style function
-    def set_border(border, min_row, max_row, min_col, max_col):
-        for row in ws.iter_rows(min_row=min_row, max_row=max_row, min_col=min_col, max_col=max_col):
-            for cell in row:
-                cell.border = border
-
-    #Set number format function
-    def set_format(format, min_row, max_row, min_col, max_col):
-        for row in ws.iter_rows(min_row=min_row, max_row=max_row, min_col=min_col, max_col=max_col):
-            for cell in row:
-                cell.number_format = format
-
+    
     #Create list of series names from input files
     series_names = [re.sub('[.txt]', '', name) for name in spread_names]
 
@@ -145,29 +119,29 @@ def main(s3, S3_BUCKET, s3_keys_csv, folder_name, spread_names):
                 cell.fill = PatternFill(fgColor='D9D9D9', bgColor='D9D9D9', fill_type = 'solid')
 
         #Set cell border
-        set_border(border_thin, 3, row_count, 2, 14)
-        set_border(border_medium_top_left_bottom, 2, 2, 2, 2)
-        set_border(border_medium_top_right_bottom, 2, 2, 14, 14)
-        set_border(border_medium_tlcorner, 3, 3, 2, 2)
-        set_border(border_medium_left, 4, 4, 2, 2)
-        set_border(border_medium_trcorner, 3, 3, 14, 14)
-        set_border(border_medium_right, 4, 4, 14, 14)
-        set_border(border_medium_tlcorner, 5, 5, 2, 2)
-        set_border(border_medium_trcorner, 5, 5, 14, 14)
+        set_border(ws, border_thin, 3, row_count, 2, 14)
+        set_border(ws, border_medium_top_left_bottom, 2, 2, 2, 2)
+        set_border(ws, border_medium_top_right_bottom, 2, 2, 14, 14)
+        set_border(ws, border_medium_tlcorner, 3, 3, 2, 2)
+        set_border(ws, border_medium_left, 4, 4, 2, 2)
+        set_border(ws, border_medium_trcorner, 3, 3, 14, 14)
+        set_border(ws, border_medium_right, 4, 4, 14, 14)
+        set_border(ws, border_medium_tlcorner, 5, 5, 2, 2)
+        set_border(ws, border_medium_trcorner, 5, 5, 14, 14)
 
-        set_border(border_medium_top_bottom, 2, 2, 3, 13)
-        set_border(border_medium_top, 5, 5, 3, 13)
-        set_border(border_medium_left, 6, row_count, 2, 2)
-        set_border(border_medium_right, 6, row_count, 14, 14)
-        set_border(border_medium_bottom, row_count, row_count, 3, 13)
-        set_border(border_medium_blcorner, row_count, row_count, 2, 2)
-        set_border(border_medium_brcorner, row_count, row_count, 14, 14)
+        set_border(ws, border_medium_top_bottom, 2, 2, 3, 13)
+        set_border(ws, border_medium_top, 5, 5, 3, 13)
+        set_border(ws, border_medium_left, 6, row_count, 2, 2)
+        set_border(ws, border_medium_right, 6, row_count, 14, 14)
+        set_border(ws, border_medium_bottom, row_count, row_count, 3, 13)
+        set_border(ws, border_medium_blcorner, row_count, row_count, 2, 2)
+        set_border(ws, border_medium_brcorner, row_count, row_count, 14, 14)
 
         #Set cell number format
-        set_format('0.00', 5, row_count, 5, 5)
-        set_format('0.0', 5, row_count, 6, 6)
-        set_format('0.00', 5, row_count, 7, 12)
-        set_format('0.00', 5, row_count, 13, 14)
+        set_format(ws, '0.00', 5, row_count, 5, 5)
+        set_format(ws, '0.0', 5, row_count, 6, 6)
+        set_format(ws, '0.00', 5, row_count, 7, 12)
+        set_format(ws, '0.00', 5, row_count, 13, 14)
 
         #Set row and column dimensions
         ws.row_dimensions[1].height = 13.8
