@@ -3,8 +3,8 @@ from flask_wtf import FlaskForm
 from wtforms.fields import MultipleFileField, SubmitField
 from werkzeug import secure_filename
 from utils import get_env, file_validate, create_folder_name
+from boto3 import client
 import os
-import boto3
 import pipe_design
 import pipe_velocity
 import gutter_spread
@@ -16,17 +16,17 @@ ALLOWED_EXTENSIONS = ['.txt']
 app.config['SECRET_KEY'] = SECRET_KEY
 app.config['MAX_CONTENT_LENGTH'] = 500 * 1024
 
-s3 = boto3.client('s3')
+s3 = client('s3')
 S3_BUCKET = get_env('S3_BUCKET') 
 
 class network_upload(FlaskForm):
-    design_files = MultipleFileField('Select Pipe Design Files')
+    design_files = MultipleFileField('Upload Pipe Design Files', id='design_input')
     design_submit = SubmitField('Format Pipe Design Files')
 
-    velocity_files = MultipleFileField('Select Pipe Velocity Files')
+    velocity_files = MultipleFileField('Upload Pipe Velocity Files', id='velocity_input')
     velocity_submit = SubmitField('Format Pipe Velocity Files')
 
-    spread_files = MultipleFileField('Select Gutter Spread Files')
+    spread_files = MultipleFileField('Upload Gutter Spread Files', id='spread_input')
     spread_submit = SubmitField('Format Gutter Spread Files')   
 
 @app.route('/', methods=['GET', 'POST'])
