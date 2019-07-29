@@ -69,7 +69,7 @@ def main(s3, S3_BUCKET, s3_keys_csv, folder_name, spread_names):
 
         row_count = ws.max_row
 
-        ws['B2'] = series_names[i] + ' SERIES'
+        ws['B2'] = series_names[i] + ' SERIES (GUTTER SPREAD)'
         ws['B3'] = 'STRUCTURE'
         ws['C3'] = 'INLET\nTYPE'
         ws['D3'] = 'BYPASS\nSTRUCTURE'
@@ -127,15 +127,23 @@ def main(s3, S3_BUCKET, s3_keys_csv, folder_name, spread_names):
         set_border(ws, border_medium_trcorner, 3, 3, 14, 14)
         set_border(ws, border_medium_right, 4, 4, 14, 14)
         set_border(ws, border_medium_tlcorner, 5, 5, 2, 2)
-        set_border(ws, border_medium_trcorner, 5, 5, 14, 14)
-
+        set_border(ws, border_medium_trcorner, 5, 5, 14, 14)      
         set_border(ws, border_medium_top_bottom, 2, 2, 3, 13)
         set_border(ws, border_medium_top, 5, 5, 3, 13)
-        set_border(ws, border_medium_left, 6, row_count, 2, 2)
-        set_border(ws, border_medium_right, 6, row_count, 14, 14)
-        set_border(ws, border_medium_bottom, row_count, row_count, 3, 13)
-        set_border(ws, border_medium_blcorner, row_count, row_count, 2, 2)
-        set_border(ws, border_medium_brcorner, row_count, row_count, 14, 14)
+
+        #Set cell border for single entry
+        if row_count == 5:
+            set_border(ws, border_medium_top_left_bottom, row_count, row_count, 2, 2)
+            set_border(ws, border_medium_top_right_bottom, row_count, row_count, 14, 14)
+            set_border(ws, border_medium_top_bottom, row_count, row_count, 3, 13)
+
+        else:
+            set_border(ws, border_medium_left, 6, row_count, 2, 2)
+            set_border(ws, border_medium_right, 6, row_count, 14, 14)
+            set_border(ws, border_medium_bottom, row_count, row_count, 3, 13)
+            set_border(ws, border_medium_blcorner, row_count, row_count, 2, 2)
+            set_border(ws, border_medium_brcorner, row_count, row_count, 14, 14)
+
 
         #Set cell number format
         set_format(ws, '0.00', 5, row_count, 5, 5)

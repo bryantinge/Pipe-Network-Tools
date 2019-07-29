@@ -159,11 +159,19 @@ def main(s3, S3_BUCKET, s3_keys_csv, folder_name, design_names):
         set_border(ws, border_medium_trcorner, 5, 5, 21, 21)
         set_border(ws, border_medium_top_bottom, 2, 2, 3, 20)
         set_border(ws, border_medium_top, 5, 5, 3, 20)
-        set_border(ws, border_medium_left, 6, row_count, 2, 2)
-        set_border(ws, border_medium_right, 6, row_count, 21, 21)
-        set_border(ws, border_medium_bottom, row_count, row_count, 3, 20)
-        set_border(ws, border_medium_blcorner, row_count, row_count, 2, 2)
-        set_border(ws, border_medium_brcorner, row_count, row_count, 21, 21)
+
+        #Set cell border for single entry
+        if row_count == 5:
+            set_border(ws, border_medium_top_left_bottom, row_count, row_count, 2, 2)
+            set_border(ws, border_medium_top_right_bottom, row_count, row_count, 21, 21)
+            set_border(ws, border_medium_top_bottom, row_count, row_count, 3, 20)
+
+        else:
+            set_border(ws, border_medium_left, 6, row_count, 2, 2)
+            set_border(ws, border_medium_right, 6, row_count, 21, 21)
+            set_border(ws, border_medium_bottom, row_count, row_count, 3, 20)
+            set_border(ws, border_medium_blcorner, row_count, row_count, 2, 2)
+            set_border(ws, border_medium_brcorner, row_count, row_count, 21, 21)
 
         #Set cell number format
         set_format(ws, '0.00', 5, row_count, 5, 5)
