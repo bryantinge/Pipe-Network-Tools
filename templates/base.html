@@ -2,18 +2,43 @@
 <html lang='en' dir='ltr'>
 
   <head>
+    
     <meta charset='utf-8'>
-    <link rel='stylesheet' href='static/stylesheets/master.css'>
-    <link rel='icon' href='static/images/favicon.ico'>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel='icon' href='../static/images/favicon.ico'>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link href="../static/css/master.css" rel="stylesheet">
+
+    <!-- Custom JS -->
+    <script src='../static/js/script.js'></script>
+
     {% if title %}
     <title>{{ title }}</title>
     {% else %}
     <title>Pipe Network Tools</title>
     {% endif %}
+
   </head>
 
   <body>
+
     {% block content %}{% endblock %}
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
   </body>
 
 </html>

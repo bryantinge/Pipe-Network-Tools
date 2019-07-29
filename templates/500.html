@@ -2,16 +2,26 @@
 
 {% block content %}
 
-  <div>
-    <h1><a href="{{ url_for('index') }}">Pipe Network Tools</a></h1>
+{% include "navbar.html" %}
+
+<main role='main' class='container-fluid'>
+
+  <div class='row pt-5 justify-content-center'>
+    <div class='col-md-12'>
+      <div class='error-template'>
+
+        <h1>Oops!</h1>
+        <h2>Files Not Valid</h2>
+
+        <div class='error-actions'>
+          <a href="{{ url_for('index') }}" class='btn btn-secondary btn-lg'>Take Me Home</a>
+          <a href="#" class='btn btn-secondary btn-lg disabled'>Contact Support</a>
+        </div>
+
+      </div>
+    </div>
   </div>
 
-  <a href="{{ url_for('index') }}">
-    <img class='error-image' src='static/images/error.png'>
-  </a>
-
-  <div>
-    <p class='error'>Chosen files were not valid<br />Click above to try again</p>
-  </div>
+</main>
 
 {% endblock %}
