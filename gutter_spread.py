@@ -1,13 +1,17 @@
 import io
 import re
+import csv
 import pandas as pd
 from openpyxl import load_workbook
 from openpyxl.styles import PatternFill, Alignment, Font
 from flask import send_file
-from utils import cell_border, set_border, set_format
+from utils import csv_validate, cell_border, set_border, set_format
 
-def main(s3, S3_BUCKET, s3_keys_csv, folder_name, spread_names):
-    
+def format(s3, S3_BUCKET, s3_keys_csv, folder_name, spread_names):
+
+    #Error message for pandas
+    error_message = 'File format not supported!'
+
     #Create list of series names from input files
     series_names = [re.sub('[.txt]', '', name) for name in spread_names]
 
@@ -15,24 +19,38 @@ def main(s3, S3_BUCKET, s3_keys_csv, folder_name, spread_names):
     s3_objects = [s3.get_object(Bucket=S3_BUCKET, Key=key) for key in s3_keys_csv]
     spread_files = [obj['Body'] for obj in s3_objects]
 
+    #Validate format of csv files
+    validation = csv_validate(spread_files, 14)
+    if type(validation) == str:
+        return validation
+    else:
+        pass
+
     #Create and format dataframes
     dfs = {} 
-    for i, csv in enumerate(spread_files):
-        df = pd.read_csv(csv, sep='\t', header=0,
-        names=['line', 'structure', 'inlet_type', 'bypass', 'area', 'tc', 'intensity', 'c_value',
-        'flow_inlet', 'flow_bypass', 'flow_captured', 'flow_bypassed', 'slope', 'spread'])
-        df.replace({'Comb.':'COMB', 'Dp-Grate':'GRATE', 'Hdwall':'FES', 'Offsite':'NONE', 'Sag':'SAG',}, inplace=True)
-        df.replace({'Notes:  j-Line contains hyd. jump':''}, inplace=True, regex=True)
-        df.replace({' j':'', '\(':'', '\)':'', ' DOUBLE':''}, inplace=True, regex=True)
-        df.dropna(axis=0, inplace=True)
-        for col in range(4,14):
-            df.iloc[:,col] = pd.to_numeric(df.iloc[:,col], errors='coerce')
-        df.drop(df.columns[0], axis=1, inplace=True)
-        df.loc[df.bypass == 'SAG', 'slope'] ='SAG'
-        df.loc[df.inlet_type == 'GRATE', 'slope'] ='N/A'
-        df.loc[df.inlet_type == 'GRATE', 'spread'] ='N/A'
-        series = series_names[i]
-        dfs[series] = df
+    try:   
+        for i, file in enumerate(spread_files):
+            df = pd.read_csv(file, sep='\t', header=0,
+            names=['line', 'structure', 'inlet_type', 'bypass', 'area', 'tc', 'intensity', 'c_value',
+            'flow_inlet', 'flow_bypass', 'flow_captured', 'flow_bypassed', 'slope', 'spread'])
+            df.replace({'Comb.':'COMB', 'Dp-Grate':'GRATE', 'Hdwall':'FES', 'Offsite':'NONE', 'Sag':'SAG',}, inplace=True)
+            df.replace({'Notes:  j-Line contains hyd. jump':''}, inplace=True, regex=True)
+            df.replace({' j':'', '\(':'', '\)':'', ' DOUBLE':''}, inplace=True, regex=True)
+            df.dropna(axis=0, inplace=True)
+            for col in range(4,14):
+                df.iloc[:,col] = pd.to_numeric(df.iloc[:,col], errors='coerce')
+            df.drop(df.columns[0], axis=1, inplace=True)
+            df.loc[df.bypass == 'SAG', 'slope'] ='SAG'
+            df.loc[df.inlet_type == 'GRATE', 'slope'] ='N/A'
+            df.loc[df.inlet_type == 'GRATE', 'spread'] ='N/A'
+            series = series_names[i]
+            dfs[series] = df
+            
+    except pd.errors.ParserError:
+        return error_message
+
+    except ValueError:
+        return error_message
 
     #Create unformatted excel file from dataframes
     df_stream = io.BytesIO()
@@ -188,6 +206,3 @@ def main(s3, S3_BUCKET, s3_keys_csv, folder_name, spread_names):
         attachment_filename='Gutter Spread.xlsx',
         as_attachment=True
     )
-
-if __name__ == '__main__':    
-    main()

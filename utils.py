@@ -3,6 +3,7 @@ from openpyxl.styles import Border, Side
 from datetime import datetime
 from pytz import timezone
 import os
+import csv
 import uuid
 
 #Get environment variables dependent on environment
@@ -28,11 +29,21 @@ def file_validate(files, ALLOWED_EXTENSIONS):
             if filename.endswith(tuple(ALLOWED_EXTENSIONS)):
                 pass
             else:
-                print('File extension not supported')
                 return False
         else:
-            print('No files selected')
             return False
+    return True
+
+#Validate format of csv files
+def csv_validate(files, allowed_size):
+    error_message = 'File format not supported!'
+    for file in files:
+        lines = file.read().decode('UTF-8').splitlines(True)
+        reader = csv.reader(lines, delimiter='\t')
+        if len(next(reader)) == allowed_size:
+            pass
+        else:
+            return error_message
     return True
 
 #Create s3 folder name with time dependent on environment

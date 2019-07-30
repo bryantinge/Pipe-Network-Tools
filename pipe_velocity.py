@@ -1,12 +1,13 @@
 import io
 import re
+import csv
 import pandas as pd
 from openpyxl import load_workbook
 from openpyxl.styles import PatternFill, Alignment, Font
 from flask import send_file
-from utils import cell_border, set_border, set_format
+from utils import csv_validate, cell_border, set_border, set_format
 
-def main(s3, S3_BUCKET, s3_keys_csv, folder_name, velocity_names):
+def format(s3, S3_BUCKET, s3_keys_csv, folder_name, velocity_names):
 
     #Create list of series names from input files
     series_names = [re.sub('[.txt]', '', name) for name in velocity_names]
@@ -15,21 +16,38 @@ def main(s3, S3_BUCKET, s3_keys_csv, folder_name, velocity_names):
     s3_objects = [s3.get_object(Bucket=S3_BUCKET, Key=key) for key in s3_keys_csv]
     velocity_files = [obj['Body'] for obj in s3_objects]
 
+    #Validate format of csv files
+    validation = csv_validate(velocity_files, 13)
+    if type(validation) == str:
+        return validation
+    else:
+        pass
+
+    #Error message for pandas
+    error_message = 'File format not supported!'
+
     #Create and format dataframes
     dfs = {} 
-    for i, csv in enumerate(velocity_files):
-        df = pd.read_csv(csv, sep='\t', header=0,
-        names=['line', 'inlet_type', 'struc_from', 'struc_to', 'area', 'tc', 'intensity',
-        'flow', 'velocity', 'length', 'size', 'material', 'slope'])
-        df.replace({'Outfall':'OUT', 'Comb.':'COMB', 'Dp-Grate':'GRATE', 'Hdwall':'FES'}, inplace=True)
-        df.replace({'Notes:  j-Line contains hyd. jump':''}, inplace=True, regex=True)
-        df.replace({' j':'', '\(':'', '\)':'', ' DOUBLE':''}, inplace=True, regex=True)
-        df.dropna(axis=0, inplace=True)
-        for col in range(4,13):
-            df.iloc[:,col] = pd.to_numeric(df.iloc[:,col], errors='coerce')
-        df.drop(df.columns[0], axis=1, inplace=True)
-        series = series_names[i]
-        dfs[series] = df
+    try:
+        for i, file in enumerate(velocity_files):
+            df = pd.read_csv(file, sep='\t', header=0,
+            names=['line', 'inlet_type', 'struc_from', 'struc_to', 'area', 'tc', 'intensity',
+            'flow', 'velocity', 'length', 'size', 'material', 'slope']) 
+            df.replace({'Outfall':'OUT', 'Comb.':'COMB', 'Dp-Grate':'GRATE', 'Hdwall':'FES'}, inplace=True)
+            df.replace({'Notes:  j-Line contains hyd. jump':''}, inplace=True, regex=True)
+            df.replace({' j':'', '\(':'', '\)':'', ' DOUBLE':''}, inplace=True, regex=True)
+            df.dropna(axis=0, inplace=True)
+            for col in range(4,13):
+                df.iloc[:,col] = pd.to_numeric(df.iloc[:,col], errors='coerce')
+            df.drop(df.columns[0], axis=1, inplace=True)
+            series = series_names[i]
+            dfs[series] = df
+ 
+    except pd.errors.ParserError:
+        return error_message
+
+    except ValueError:
+        return error_message
 
     #Create unformatted excel file from dataframes
     df_stream = io.BytesIO()
@@ -199,6 +217,3 @@ def main(s3, S3_BUCKET, s3_keys_csv, folder_name, velocity_names):
         attachment_filename='Pipe Velocity.xlsx',
         as_attachment=True
     )
-
-if __name__ == '__main__':    
-    main()

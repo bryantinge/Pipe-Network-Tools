@@ -86,3 +86,10 @@ input[type='submit'] {
   margin-right:8px;
   font-size: 18px; 
 }
+
+.alert-bottom {
+    position: fixed;
+    bottom: 8px;
+    left:3%;
+    width: 94%;
+}

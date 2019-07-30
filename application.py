@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, send_file
+from flask import Flask, render_template, redirect, url_for, send_file, flash
 from flask_wtf import FlaskForm
 from wtforms.fields import MultipleFileField, SubmitField
 from werkzeug import secure_filename
@@ -45,9 +45,13 @@ def index():
                     s3_key_csv = ''.join(['design', '/', folder_name, '/', 'csv', '/', design_names[i]])
                     s3.put_object(Bucket=S3_BUCKET, Key=s3_key_csv, Body=file)
                     s3_keys_csv.append(s3_key_csv)
-                design_xlsx = pipe_design.main(s3, S3_BUCKET, s3_keys_csv, folder_name, design_names)
-                return design_xlsx
+                design_output = pipe_design.format(s3, S3_BUCKET, s3_keys_csv, folder_name, design_names)
+                if type(design_output) == str:
+                    flash(design_output)
+                else:
+                    return design_output
             else:
+                flash('File format not supported!')
                 return redirect(url_for('index'))
 
         if form.velocity_submit.data:
@@ -60,9 +64,13 @@ def index():
                     s3_key_csv = ''.join(['velocity', '/', folder_name, '/', 'csv', '/', velocity_names[i]])
                     s3.put_object(Bucket=S3_BUCKET, Key=s3_key_csv, Body=file)
                     s3_keys_csv.append(s3_key_csv)
-                velocity_xlsx = pipe_velocity.main(s3, S3_BUCKET, s3_keys_csv, folder_name, velocity_names)    
-                return velocity_xlsx
+                velocity_output = pipe_velocity.format(s3, S3_BUCKET, s3_keys_csv, folder_name, velocity_names)    
+                if type(velocity_output) == str:
+                    flash(velocity_output)
+                else:
+                    return velocity_output
             else:
+                flash('File format not supported!')
                 return redirect(url_for('index'))
 
         if form.spread_submit.data:
@@ -75,9 +83,13 @@ def index():
                     s3_key_csv = ''.join(['spread', '/', folder_name, '/', 'csv', '/', spread_names[i]])
                     s3.put_object(Bucket=S3_BUCKET, Key=s3_key_csv, Body=file)
                     s3_keys_csv.append(s3_key_csv)
-                spread_xlsx = gutter_spread.main(s3, S3_BUCKET, s3_keys_csv, folder_name, spread_names)
-                return spread_xlsx
+                spread_output = gutter_spread.format(s3, S3_BUCKET, s3_keys_csv, folder_name, spread_names)
+                if type(spread_output) == str:
+                    flash(spread_output)
+                else:
+                    return spread_output
             else:
+                flash('File format not supported!')
                 return redirect(url_for('index'))
 
     return render_template('index.html', form=form)
@@ -109,7 +121,7 @@ def files_too_large(error):
 
 @app.errorhandler(500)
 def internal_error(error):
-    title = 'Files Not Valid'
+    title = 'Internal Server Error'
     return render_template('500.html', title=title)
 
 if __name__ == '__main__':
