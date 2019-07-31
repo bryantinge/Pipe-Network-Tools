@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, url_for, send_file, flash
 from flask_wtf import FlaskForm
 from wtforms.fields import MultipleFileField, SubmitField
 from werkzeug import secure_filename
-from utils import get_env, file_validate, create_folder_name
+from utils import get_env, file_validate, csv_validate, create_folder_name
 from boto3 import client
 import os
 import pipe_design
@@ -36,12 +36,20 @@ def index():
     if form.validate_on_submit(): 
 
         if form.design_submit.data:
-            if file_validate(form.design_files.data, ALLOWED_EXTENSIONS):
+            file_validation = file_validate(form.design_files.data, ALLOWED_EXTENSIONS)
+            if file_validation == 'pass':
                 design_files = form.design_files.data
+                csv_validation = csv_validate(design_files, 21)
+                if type(csv_validation) == str:
+                    flash(csv_validation)
+                    return redirect(url_for('index'))
+                else:
+                    pass
                 design_names = [secure_filename(file.filename) for file in design_files]
                 folder_name = create_folder_name()
                 s3_keys_csv = []
                 for i, file in enumerate(design_files):
+                    file.seek(0)
                     s3_key_csv = ''.join(['design', '/', folder_name, '/', 'csv', '/', design_names[i]])
                     s3.put_object(Bucket=S3_BUCKET, Key=s3_key_csv, Body=file)
                     s3_keys_csv.append(s3_key_csv)
@@ -50,17 +58,28 @@ def index():
                     flash(design_output)
                 else:
                     return design_output
+            elif file_validation == 'no_files':
+                flash('No files selected!')
+                return redirect(url_for('index'))
             else:
                 flash('File format not supported!')
                 return redirect(url_for('index'))
 
         if form.velocity_submit.data:
-            if file_validate(form.velocity_files.data, ALLOWED_EXTENSIONS):            
+            file_validation = file_validate(form.velocity_files.data, ALLOWED_EXTENSIONS)
+            if file_validation == 'pass':            
                 velocity_files = form.velocity_files.data
+                csv_validation = csv_validate(velocity_files, 13)
+                if type(csv_validation) == str:
+                    flash(csv_validation)
+                    return redirect(url_for('index'))
+                else:
+                    pass
                 velocity_names = [secure_filename(file.filename) for file in velocity_files]
                 folder_name = create_folder_name()
                 s3_keys_csv = []
                 for i, file in enumerate(velocity_files):
+                    file.seek(0)
                     s3_key_csv = ''.join(['velocity', '/', folder_name, '/', 'csv', '/', velocity_names[i]])
                     s3.put_object(Bucket=S3_BUCKET, Key=s3_key_csv, Body=file)
                     s3_keys_csv.append(s3_key_csv)
@@ -69,17 +88,28 @@ def index():
                     flash(velocity_output)
                 else:
                     return velocity_output
+            elif file_validation == 'no_files':
+                flash('No files selected!')
+                return redirect(url_for('index'))
             else:
                 flash('File format not supported!')
                 return redirect(url_for('index'))
 
         if form.spread_submit.data:
-            if file_validate(form.spread_files.data, ALLOWED_EXTENSIONS):
+            file_validation = file_validate(form.spread_files.data, ALLOWED_EXTENSIONS)
+            if file_validation == 'pass':
                 spread_files = form.spread_files.data
+                csv_validation = csv_validate(spread_files, 14)
+                if type(csv_validation) == str:
+                    flash(csv_validation)
+                    return redirect(url_for('index'))
+                else:
+                    pass
                 spread_names = [secure_filename(file.filename) for file in spread_files]
                 folder_name = create_folder_name()
                 s3_keys_csv = []
                 for i, file in enumerate(spread_files):
+                    file.seek(0)
                     s3_key_csv = ''.join(['spread', '/', folder_name, '/', 'csv', '/', spread_names[i]])
                     s3.put_object(Bucket=S3_BUCKET, Key=s3_key_csv, Body=file)
                     s3_keys_csv.append(s3_key_csv)
@@ -88,6 +118,9 @@ def index():
                     flash(spread_output)
                 else:
                     return spread_output
+            elif file_validation == 'no_files':
+                flash('No files selected!')
+                return redirect(url_for('index'))
             else:
                 flash('File format not supported!')
                 return redirect(url_for('index'))

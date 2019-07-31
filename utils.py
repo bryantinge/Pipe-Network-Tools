@@ -28,11 +28,13 @@ def file_validate(files, ALLOWED_EXTENSIONS):
             filename = file.filename.lower()
             if filename.endswith(tuple(ALLOWED_EXTENSIONS)):
                 pass
+            elif filename == '':
+                return 'no_files'
             else:
                 return False
         else:
             return False
-    return True
+    return 'pass'
 
 #Validate format of csv files
 def csv_validate(files, allowed_size):

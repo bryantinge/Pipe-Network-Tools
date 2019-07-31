@@ -5,12 +5,9 @@ import pandas as pd
 from openpyxl import load_workbook
 from openpyxl.styles import PatternFill, Alignment, Font
 from flask import send_file
-from utils import csv_validate, cell_border, set_border, set_format
+from utils import cell_border, set_border, set_format
 
 def format(s3, S3_BUCKET, s3_keys_csv, folder_name, spread_names):
-
-    #Error message for pandas
-    error_message = 'File format not supported!'
 
     #Create list of series names from input files
     series_names = [re.sub('[.txt]', '', name) for name in spread_names]
@@ -19,12 +16,8 @@ def format(s3, S3_BUCKET, s3_keys_csv, folder_name, spread_names):
     s3_objects = [s3.get_object(Bucket=S3_BUCKET, Key=key) for key in s3_keys_csv]
     spread_files = [obj['Body'] for obj in s3_objects]
 
-    #Validate format of csv files
-    validation = csv_validate(spread_files, 14)
-    if type(validation) == str:
-        return validation
-    else:
-        pass
+    #Error message for pandas
+    error_message = 'File format not supported!'
 
     #Create and format dataframes
     dfs = {} 
@@ -59,13 +52,8 @@ def format(s3, S3_BUCKET, s3_keys_csv, folder_name, spread_names):
         df.to_excel(writer, sheet_name=series, startrow=3, startcol=1, index=False)
     writer.save()
 
-    #Write unformatted excel file to s3
-    s3_key_xlsx_unf = ''.join(['spread', '/', folder_name, '/', 'unformatted xlsx', '/', 'unformatted.xlsx'])
-    stream_xlsx_unf = df_stream.getvalue()
-    s3.put_object(Bucket=S3_BUCKET, Key=s3_key_xlsx_unf, Body=stream_xlsx_unf)
-
     #Read workbook into openpyxl from binary
-    wb = load_workbook(io.BytesIO(stream_xlsx_unf))    
+    wb = load_workbook(io.BytesIO(df_stream.getvalue()))    
 
     #Create cell border styles
     border_thin = cell_border('thin', 'thin', 'thin', 'thin')
@@ -197,7 +185,7 @@ def format(s3, S3_BUCKET, s3_keys_csv, folder_name, spread_names):
 
     #Write formatted xlsx file to s3
     xlsx_form = stream_xlsx_form.getvalue()
-    s3_key_xlsx_form = ''.join(['spread', '/', folder_name, '/', 'formatted xlsx', '/', 'formatted.xlsx'])
+    s3_key_xlsx_form = ''.join(['spread', '/', folder_name, '/', 'xlsx', '/', 'xlsx.xlsx'])
     s3.put_object(Bucket=S3_BUCKET, Key=s3_key_xlsx_form, Body=xlsx_form)
 
     #Return formatted excel file to user
