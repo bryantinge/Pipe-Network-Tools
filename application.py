@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, send_file, flash
+from flask import Flask, render_template, redirect, url_for, send_file, flash, get_flashed_messages
 from flask_wtf import FlaskForm
 from wtforms.fields import MultipleFileField, SubmitField
 from werkzeug import secure_filename
@@ -41,7 +41,7 @@ def index():
                 design_files = form.design_files.data
                 csv_validation = csv_validate(design_files, 21)
                 if type(csv_validation) == str:
-                    flash(csv_validation)
+                    flash(csv_validation, 'danger')
                     return redirect(url_for('index'))
                 else:
                     pass
@@ -53,16 +53,17 @@ def index():
                     s3_key_csv = ''.join(['design', '/', folder_name, '/', 'csv', '/', design_names[i]])
                     s3.put_object(Bucket=S3_BUCKET, Key=s3_key_csv, Body=file)
                     s3_keys_csv.append(s3_key_csv)
-                design_output = pipe_design.format(s3, S3_BUCKET, s3_keys_csv, folder_name, design_names)
-                if type(design_output) == str:
-                    flash(design_output)
+                s3_key_xlsx = pipe_design.format(s3, S3_BUCKET, s3_keys_csv, folder_name, design_names)
+                if s3_key_xlsx == 'File format not supported!':
+                    flash(s3_key_xlsx, 'danger')
+                    return redirect(url_for('index'))
                 else:
-                    return design_output
+                    return redirect(url_for('download', s3_key_xlsx=s3_key_xlsx))
             elif file_validation == 'no_files':
-                flash('No files selected!')
+                flash('No files selected!', 'danger')
                 return redirect(url_for('index'))
             else:
-                flash('File format not supported!')
+                flash('File format not supported!', 'danger')
                 return redirect(url_for('index'))
 
         if form.velocity_submit.data:
@@ -71,7 +72,7 @@ def index():
                 velocity_files = form.velocity_files.data
                 csv_validation = csv_validate(velocity_files, 13)
                 if type(csv_validation) == str:
-                    flash(csv_validation)
+                    flash(csv_validation, 'danger')
                     return redirect(url_for('index'))
                 else:
                     pass
@@ -83,16 +84,17 @@ def index():
                     s3_key_csv = ''.join(['velocity', '/', folder_name, '/', 'csv', '/', velocity_names[i]])
                     s3.put_object(Bucket=S3_BUCKET, Key=s3_key_csv, Body=file)
                     s3_keys_csv.append(s3_key_csv)
-                velocity_output = pipe_velocity.format(s3, S3_BUCKET, s3_keys_csv, folder_name, velocity_names)    
-                if type(velocity_output) == str:
-                    flash(velocity_output)
+                s3_key_xlsx = pipe_velocity.format(s3, S3_BUCKET, s3_keys_csv, folder_name, velocity_names)    
+                if s3_key_xlsx == 'File format not supported!':
+                    flash(s3_key_xlsx, 'danger')
+                    return redirect(url_for('index'))
                 else:
-                    return velocity_output
+                    return redirect(url_for('download', s3_key_xlsx=s3_key_xlsx))
             elif file_validation == 'no_files':
-                flash('No files selected!')
+                flash('No files selected!', 'danger')
                 return redirect(url_for('index'))
             else:
-                flash('File format not supported!')
+                flash('File format not supported!', 'danger')
                 return redirect(url_for('index'))
 
         if form.spread_submit.data:
@@ -101,7 +103,7 @@ def index():
                 spread_files = form.spread_files.data
                 csv_validation = csv_validate(spread_files, 14)
                 if type(csv_validation) == str:
-                    flash(csv_validation)
+                    flash(csv_validation, 'danger')
                     return redirect(url_for('index'))
                 else:
                     pass
@@ -113,19 +115,29 @@ def index():
                     s3_key_csv = ''.join(['spread', '/', folder_name, '/', 'csv', '/', spread_names[i]])
                     s3.put_object(Bucket=S3_BUCKET, Key=s3_key_csv, Body=file)
                     s3_keys_csv.append(s3_key_csv)
-                spread_output = gutter_spread.format(s3, S3_BUCKET, s3_keys_csv, folder_name, spread_names)
-                if type(spread_output) == str:
-                    flash(spread_output)
+                s3_key_xlsx = gutter_spread.format(s3, S3_BUCKET, s3_keys_csv, folder_name, spread_names)
+                if s3_key_xlsx == 'File format not supported!':
+                    flash(s3_key_xlsx, 'danger')
+                    return redirect(url_for('index'))
                 else:
-                    return spread_output
+                    return redirect(url_for('download', s3_key_xlsx=s3_key_xlsx))
             elif file_validation == 'no_files':
-                flash('No files selected!')
+                flash('No files selected!', 'danger')
                 return redirect(url_for('index'))
             else:
-                flash('File format not supported!')
+                flash('File format not supported!', 'danger')
                 return redirect(url_for('index'))
 
     return render_template('index.html', form=form)
+
+@app.route('/download/<path:s3_key_xlsx>')
+def download(s3_key_xlsx):
+    url = s3.generate_presigned_url(
+        'get_object',
+        Params = {'Bucket': S3_BUCKET,
+        'Key': s3_key_xlsx},
+        ExpiresIn = 100)
+    return redirect(url, code=302)
 
 @app.route('/design_report')
 def design_report():

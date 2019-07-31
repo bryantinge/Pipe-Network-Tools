@@ -196,12 +196,8 @@ def format(s3, S3_BUCKET, s3_keys_csv, folder_name, velocity_names):
 
     #Write formatted xlsx file to s3
     xlsx_form = stream_xlsx_form.getvalue()
-    s3_key_xlsx_form = ''.join(['velocity', '/', folder_name, '/', 'xlsx', '/', 'xlsx.xlsx'])
-    s3.put_object(Bucket=S3_BUCKET, Key=s3_key_xlsx_form, Body=xlsx_form)
+    s3_key_xlsx = ''.join(['velocity', '/', folder_name, '/', 'xlsx', '/', 'Pipe Velocity.xlsx'])
+    s3.put_object(Bucket=S3_BUCKET, Key=s3_key_xlsx, Body=xlsx_form)
 
-    #Return formatted excel file to user
-    return send_file(
-        stream_xlsx_form, 
-        attachment_filename='Pipe Velocity.xlsx',
-        as_attachment=True
-    )
+    #Return s3 key
+    return s3_key_xlsx
