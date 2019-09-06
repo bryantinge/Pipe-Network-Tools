@@ -6,9 +6,9 @@
 
 <main role='main' class='container-fluid'>
 
-  <div class='row px-4 pt-sm-2 pt-md-5'>
+  <div class='row px-4 pt-sm-2 pt-md-4'>
 
-    <form class='col-md-4 text-center py-2' action='' method='post' enctype='multipart/form-data'
+    <form class='col-md-4 text-center py-3' action='' method='post' enctype='multipart/form-data'
     onchange='showFiles("design_input", "design_filenames", "design_filesizes")'>
       {{ form.hidden_tag() }}
       <div>
@@ -16,20 +16,26 @@
         {{ form.design_files.label(class='btn btn-secondary btn-form my-3') }}
       </div>
 
-      <div class='upload-box rounded mx-auto py-2 px-3 w-75'>
+      <div class='upload-box rounded mx-auto py-3 px-3 my-2 w-75'>
         <div class='row'>
           <div class='col-7 filenames' id='design_filenames'></div>
           <div class='col-5 filesizes' id='design_filesizes'></div>
         </div>
       </div>
 
+      <div class='mx-auto mt-3 mb-2'>
+        {{ form.design_hgl_toggle(class='form-check-input') }}
+        {{ form.design_hgl_toggle.label(class='form-check-label') }}
+      </div>
+
       <div>
         {{ form.design_submit() }}
-        {{ form.design_submit.label(class='btn btn-secondary btn-form my-3') }}
+        {{ form.design_submit.label(class='btn btn-secondary btn-form my-2') }}
       </div>
+
     </form>
 
-    <form class='col-md-4 text-center py-2' action='' method='post' enctype='multipart/form-data'
+    <form class='col-md-4 text-center py-3' action='' method='post' enctype='multipart/form-data'
     onchange='showFiles("velocity_input", "velocity_filenames", "velocity_filesizes")'>
       {{ form.hidden_tag() }}
       <div>
@@ -37,20 +43,26 @@
         {{ form.velocity_files.label(class='btn btn-secondary btn-form my-3') }}
       </div>
 
-      <div class='upload-box rounded mx-auto py-2 px-3 w-75'>
+      <div class='upload-box rounded mx-auto py-3 px-3 my-2 w-75'>
         <div class='row'>
           <div class='col-7 filenames' id='velocity_filenames'></div>
           <div class='col-5 filesizes' id='velocity_filesizes'></div>
         </div>
       </div>
 
+      <div class='mx-auto mt-3 mb-2'>
+        {{ form.velocity_fps_toggle(class='form-check-input') }}
+        {{ form.velocity_fps_toggle.label(class='form-check-label') }}
+      </div>
+
       <div>
         {{ form.velocity_submit() }}
-        {{ form.velocity_submit.label(class='btn btn-secondary btn-form my-3') }}
+        {{ form.velocity_submit.label(class='btn btn-secondary btn-form my-2') }}
       </div>
+
     </form>
 
-    <form class='col-md-4 text-center py-2' action='' method='post' enctype='multipart/form-data'
+    <form class='col-md-4 text-center py-3' action='' method='post' enctype='multipart/form-data'
     onchange='showFiles("spread_input", "spread_filenames", "spread_filesizes")'>
       {{ form.hidden_tag() }}
       <div>
@@ -58,17 +70,23 @@
         {{ form.spread_files.label(class='btn btn-secondary btn-form my-3') }}
       </div>
 
-      <div class='upload-box rounded mx-auto py-2 px-3 w-75'>
+      <div class='upload-box rounded mx-auto py-3 px-3 my-2 w-75'>
         <div class='row'>
           <div class='col-7 filenames' id='spread_filenames'></div>
           <div class='col-5 filesizes' id='spread_filesizes'></div>
         </div>
       </div>
 
+      <div class='mx-auto mt-3 mb-2'>
+        {{ form.spread_bypass_toggle(class='form-check-input') }}
+        {{ form.spread_bypass_toggle.label(class='form-check-label') }}
+      </div>
+
       <div>
         {{ form.spread_submit() }}
-        {{ form.spread_submit.label(class='btn btn-secondary btn-form my-3') }}
+        {{ form.spread_submit.label(class='btn btn-secondary btn-form my-2') }}
       </div>
+
     </form>
 
   </div>

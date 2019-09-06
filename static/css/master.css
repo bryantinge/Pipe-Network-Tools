@@ -19,6 +19,10 @@ input[type='submit'] {
   display: none;
 }
 
+input[type=checkbox] {
+    margin-top: 7.5px;
+}
+
 .navbar-dark .navbar-nav .active > .nav-link,
 .navbar-dark .navbar-nav .nav-link.active,
 .navbar-dark .navbar-nav .nav-link.show,
