@@ -163,8 +163,9 @@ def format(s3, S3_BUCKET, s3_keys_csv, folder_name,
         # Set cell font
         for row in ws.iter_rows():
             for cell in row:
-                cell.alignment = Alignment(
-                    horizontal='center', vertical='center', wrapText=True)
+                cell.alignment = Alignment(horizontal='center',
+                                           vertical='center',
+                                           wrapText=True)
                 cell.font = Font(size=10, name='Arial')
 
         for row in ws.iter_rows(min_row=2, max_row=4,
@@ -173,14 +174,14 @@ def format(s3, S3_BUCKET, s3_keys_csv, folder_name,
                 cell.font = Font(bold=True, size=10, name='Arial')
 
         # Set cell background fill
-        ws['B2'].fill = PatternFill(
-            fgColor='BFBFBF', bgColor='BFBFBF', fill_type='solid')
+        ws['B2'].fill = PatternFill(fgColor='BFBFBF', bgColor='BFBFBF',
+                                    fill_type='solid')
 
         for row in ws.iter_rows(min_row=3, max_row=4,
                                 min_col=2, max_col=max_col):
             for cell in row:
-                cell.fill = PatternFill(
-                    fgColor='D9D9D9', bgColor='D9D9D9', fill_type='solid')
+                cell.fill = PatternFill(fgColor='D9D9D9', bgColor='D9D9D9',
+                                        fill_type='solid')
 
         # Set cell border
         set_border(ws, border_thin, 3, max_row, 2, max_col)
