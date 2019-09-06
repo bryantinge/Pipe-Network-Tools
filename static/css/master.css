@@ -6,6 +6,13 @@
   }
 }
 
+@media (min-width: 768px) {
+  .form-check-inline 
+  .form-check-input {
+    margin-top: 3px;
+  }
+}
+
 body {
   padding-top: 3.5rem;
   background-color: #e9ecef
