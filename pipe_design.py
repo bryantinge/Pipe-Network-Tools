@@ -56,9 +56,11 @@ def design_format(s3, S3_BUCKET, s3_keys_csv, folder_name,
             dfs[series] = df
 
     except pd.errors.ParserError:
+        print('ParserError')
         return None
 
     except ValueError:
+        print('ValueError')
         return None
 
     # Create unformatted excel file from dataframes

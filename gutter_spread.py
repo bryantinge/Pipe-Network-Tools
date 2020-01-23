@@ -36,7 +36,8 @@ def spread_format(s3, S3_BUCKET, s3_keys_csv, folder_name,
             df.replace({'Outfall': 'OUT', 'Curb': 'CURB', 'Grate': 'GRATE',
                         'Comb.': 'COMB', 'Generic': 'GENERIC', 'Hdwall': 'FES',
                         'None': 'NONE', 'Dp-Curb': 'DP-CURB',
-                        'Dp-Grate': 'DP-GRATE', 'Null Structure': 'NONE'},
+                        'Dp-Grate': 'DP-GRATE', 'Null Structure': 'NONE',
+                        'Offsite': 'NONE', 'Sag': 'SAG'},
                        inplace=True)
             df.replace({'Notes:  j-Line contains hyd. jump': ''},
                        inplace=True, regex=True)
@@ -48,8 +49,8 @@ def spread_format(s3, S3_BUCKET, s3_keys_csv, folder_name,
                 df.iloc[:, col] = pd.to_numeric(
                     df.iloc[:, col], errors='coerce')
 
-            df.loc[df.inlet_type == 'GRATE', 'slope'] = 'N/A'
-            df.loc[df.inlet_type == 'GRATE', 'spread'] = 'N/A'
+            df.loc[df.inlet_type != 'COMB', 'slope'] = 'N/A'
+            df.loc[df.inlet_type != 'COMB', 'spread'] = 'N/A'
             df.loc[df.bypass == 'SAG', 'slope'] = 'SAG'
 
             df.drop(df.columns[0], axis=1, inplace=True)
@@ -61,9 +62,11 @@ def spread_format(s3, S3_BUCKET, s3_keys_csv, folder_name,
             dfs[series] = df
 
     except pd.errors.ParserError:
+        print('ParserError')
         return None
 
     except ValueError:
+        print('ValueError')
         return None
 
     # Create unformatted excel file from dataframes
