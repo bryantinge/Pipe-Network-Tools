@@ -11,7 +11,8 @@ def velocity_format(s3, S3_BUCKET, s3_keys_csv, folder_name,
     '''Formats pipe velocity input csv files to an xlsx file'''
 
     # Create list of series names from input files
-    series_names = [re.sub('[.txt]', '', name) for name in velocity_names]
+    series_names = [re.sub('.txt', '', name) for name in velocity_names]
+    series_names = [re.sub('_', ' ', name) for name in series_names]
 
     # Read txt files from s3
     s3_objects = [s3.get_object(Bucket=S3_BUCKET, Key=key)
