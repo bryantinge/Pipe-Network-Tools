@@ -6,8 +6,8 @@ from openpyxl.styles import PatternFill, Alignment, Font
 from utils import cell_border, set_border, set_format
 
 
-def format(s3, S3_BUCKET, s3_keys_csv, folder_name,
-           velocity_names, fps_toggle):
+def velocity_format(s3, S3_BUCKET, s3_keys_csv, folder_name,
+                    velocity_names, fps_toggle):
     '''Formats pipe velocity input csv files to an xlsx file'''
 
     # Create list of series names from input files

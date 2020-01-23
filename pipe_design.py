@@ -6,8 +6,8 @@ from openpyxl.styles import PatternFill, Alignment, Font
 from utils import cell_border, set_border, set_format
 
 
-def format(s3, S3_BUCKET, s3_keys_csv, folder_name,
-           design_names, hgl_toggle):
+def design_format(s3, S3_BUCKET, s3_keys_csv, folder_name,
+                  design_names, hgl_toggle):
     '''Formats pipe design input csv files to an xlsx file'''
 
     # Create list of series names from input files

@@ -5,9 +5,9 @@ from werkzeug import secure_filename
 from boto3 import client
 from forms import NetworkUpload
 import os
-import pipe_design
-import pipe_velocity
-import gutter_spread
+from pipe_design import design_format
+from pipe_velocity import velocity_format
+from gutter_spread import spread_format
 
 application = app = Flask(__name__)
 SECRET_KEY = os.urandom(32)
@@ -40,9 +40,9 @@ def index():
                     s3.put_object(Bucket=S3_BUCKET, Key=s3_key_csv, Body=file)
                     s3_keys_csv.append(s3_key_csv)
                 hgl_toggle = (form.design_hgl_toggle.data)
-                response = pipe_design.format(s3, S3_BUCKET, s3_keys_csv,
-                                              folder_name, design_names,
-                                              hgl_toggle)
+                response = design_format(s3, S3_BUCKET, s3_keys_csv,
+                                         folder_name, design_names,
+                                         hgl_toggle)
                 if not response:
                     flash(format_error, 'danger')
                     return redirect(url_for('index'))
@@ -68,9 +68,9 @@ def index():
                     s3.put_object(Bucket=S3_BUCKET, Key=s3_key_csv, Body=file)
                     s3_keys_csv.append(s3_key_csv)
                 fps_toggle = (form.velocity_fps_toggle.data)
-                response = pipe_velocity.format(s3, S3_BUCKET, s3_keys_csv,
-                                                folder_name, velocity_names,
-                                                fps_toggle)
+                response = velocity_format(s3, S3_BUCKET, s3_keys_csv,
+                                           folder_name, velocity_names,
+                                           fps_toggle)
                 if not response:
                     flash(format_error, 'danger')
                     return redirect(url_for('index'))
@@ -96,9 +96,9 @@ def index():
                     s3.put_object(Bucket=S3_BUCKET, Key=s3_key_csv, Body=file)
                     s3_keys_csv.append(s3_key_csv)
                 bypass_toggle = (form.spread_bypass_toggle.data)
-                response = gutter_spread.format(s3, S3_BUCKET, s3_keys_csv,
-                                                folder_name, spread_names,
-                                                bypass_toggle)
+                response = spread_format(s3, S3_BUCKET, s3_keys_csv,
+                                         folder_name, spread_names,
+                                         bypass_toggle)
                 if not response:
                     flash(format_error, 'danger')
                     return redirect(url_for('index'))
