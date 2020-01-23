@@ -3,7 +3,7 @@ import re
 import pandas as pd
 from openpyxl import load_workbook
 from openpyxl.styles import PatternFill, Alignment, Font
-from utils import cell_border, set_border, set_format
+from utils import borders, set_border, set_format
 
 
 def velocity_format(s3, S3_BUCKET, s3_keys_csv, folder_name,
@@ -68,32 +68,6 @@ def velocity_format(s3, S3_BUCKET, s3_keys_csv, folder_name,
 
     # Read workbook into openpyxl from binary
     wb = load_workbook(io.BytesIO(df_stream.getvalue()))
-
-    # Create cell border styles
-    border_thin = cell_border(
-        'thin', 'thin', 'thin', 'thin')
-    border_medium_top = cell_border(
-        'thin', 'thin', 'medium', 'thin')
-    border_medium_bottom = cell_border(
-        'thin', 'thin', 'thin', 'medium')
-    border_medium_left = cell_border(
-        'medium', 'thin', 'thin', 'thin')
-    border_medium_right = cell_border(
-        'thin', 'medium', 'thin', 'thin')
-    border_medium_tlcorner = cell_border(
-        'medium', 'thin', 'medium', 'thin')
-    border_medium_trcorner = cell_border(
-        'thin', 'medium', 'medium', 'thin')
-    border_medium_blcorner = cell_border(
-        'medium', 'thin', 'thin', 'medium')
-    border_medium_brcorner = cell_border(
-        'thin', 'medium', 'thin', 'medium')
-    border_medium_top_bottom = cell_border(
-        'thin', 'thin', 'medium', 'medium')
-    border_medium_top_left_bottom = cell_border(
-        'medium', 'thin', 'medium', 'medium')
-    border_medium_top_right_bottom = cell_border(
-        'thin', 'medium', 'medium', 'medium')
 
     # Format excel sheets
     for i, ws in enumerate(wb.worksheets):
@@ -192,37 +166,37 @@ def velocity_format(s3, S3_BUCKET, s3_keys_csv, folder_name,
                                             fill_type='solid')
 
         # Set cell border
-        set_border(ws, border_thin, 3, max_row, 2, max_col)
-        set_border(ws, border_medium_top_left_bottom, 2, 2, 2, 2)
-        set_border(ws, border_medium_top_right_bottom, 2, 2, max_col, max_col)
-        set_border(ws, border_medium_tlcorner, 3, 3, 2, 2)
-        set_border(ws, border_medium_left, 4, 4, 2, 2)
-        set_border(ws, border_medium_trcorner, 3, 3, max_col, max_col)
-        set_border(ws, border_medium_right, 4, 4, max_col, max_col)
-        set_border(ws, border_medium_tlcorner, 5, 5, 2, 2)
-        set_border(ws, border_medium_trcorner, 5, 5, max_col, max_col)
-        set_border(ws, border_medium_top_bottom, 2, 2, 3, max_col - 1)
-        set_border(ws, border_medium_top, 5, 5, 3, max_col - 1)
+        set_border(ws, borders.thin, 3, max_row, 2, max_col)
+        set_border(ws, borders.med_top_left_bot, 2, 2, 2, 2)
+        set_border(ws, borders.med_top_right_bot, 2, 2, max_col, max_col)
+        set_border(ws, borders.med_tlcorner, 3, 3, 2, 2)
+        set_border(ws, borders.med_left, 4, 4, 2, 2)
+        set_border(ws, borders.med_trcorner, 3, 3, max_col, max_col)
+        set_border(ws, borders.med_right, 4, 4, max_col, max_col)
+        set_border(ws, borders.med_tlcorner, 5, 5, 2, 2)
+        set_border(ws, borders.med_trcorner, 5, 5, max_col, max_col)
+        set_border(ws, borders.med_top_bot, 2, 2, 3, max_col - 1)
+        set_border(ws, borders.med_top, 5, 5, 3, max_col - 1)
 
         # Set cell border for single entry
         if max_row == 5:
-            set_border(ws, border_medium_top_left_bottom,
+            set_border(ws, borders.med_top_left_bot,
                        max_row, max_row, 2, 2)
-            set_border(ws, border_medium_top_right_bottom,
+            set_border(ws, borders.med_top_right_bot,
                        max_row, max_row, max_col, max_col)
-            set_border(ws, border_medium_top_bottom,
+            set_border(ws, borders.med_top_bot,
                        max_row, max_row, 3, max_col - 1)
 
         else:
-            set_border(ws, border_medium_left,
+            set_border(ws, borders.med_left,
                        6, max_row, 2, 2)
-            set_border(ws, border_medium_right,
+            set_border(ws, borders.med_right,
                        6, max_row, max_col, max_col)
-            set_border(ws, border_medium_bottom,
+            set_border(ws, borders.med_bot,
                        max_row, max_row, 3, max_col - 1)
-            set_border(ws, border_medium_blcorner,
+            set_border(ws, borders.med_blcorner,
                        max_row, max_row, 2, 2)
-            set_border(ws, border_medium_brcorner,
+            set_border(ws, borders.med_brcorner,
                        max_row, max_row, max_col, max_col)
 
         # Set cell number format

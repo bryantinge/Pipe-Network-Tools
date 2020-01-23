@@ -48,6 +48,33 @@ def cell_border(left, right, top, bottom):
     return border
 
 
+class borders():
+    thin = cell_border(
+        'thin', 'thin', 'thin', 'thin')
+    med_top = cell_border(
+        'thin', 'thin', 'medium', 'thin')
+    med_bot = cell_border(
+        'thin', 'thin', 'thin', 'medium')
+    med_left = cell_border(
+        'medium', 'thin', 'thin', 'thin')
+    med_right = cell_border(
+        'thin', 'medium', 'thin', 'thin')
+    med_tlcorner = cell_border(
+        'medium', 'thin', 'medium', 'thin')
+    med_trcorner = cell_border(
+        'thin', 'medium', 'medium', 'thin')
+    med_blcorner = cell_border(
+        'medium', 'thin', 'thin', 'medium')
+    med_brcorner = cell_border(
+        'thin', 'medium', 'thin', 'medium')
+    med_top_bot = cell_border(
+        'thin', 'thin', 'medium', 'medium')
+    med_top_left_bot = cell_border(
+        'medium', 'thin', 'medium', 'medium')
+    med_top_right_bot = cell_border(
+        'thin', 'medium', 'medium', 'medium')
+
+
 def set_border(ws, border, min_row, max_row, min_col, max_col):
     '''Set border style function'''
     for row in ws.iter_rows(
