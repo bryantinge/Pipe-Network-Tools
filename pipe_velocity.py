@@ -31,8 +31,11 @@ def velocity_format(s3, S3_BUCKET, s3_keys_csv, folder_name,
                        'material', 'slope']
             )
 
-            df.replace({'Outfall': 'OUT', 'Comb.': 'COMB', 'Dp-Grate': 'GRATE',
-                        'Hdwall': 'FES'}, inplace=True)
+            df.replace({'Outfall': 'OUT', 'Curb': 'CURB', 'Grate': 'GRATE',
+                        'Comb.': 'COMB', 'Generic': 'GENERIC', 'Hdwall': 'FES',
+                        'None': 'NONE', 'Dp-Curb': 'DP-CURB',
+                        'Dp-Grate': 'DP-GRATE', 'Null Structure': 'NONE'},
+                       inplace=True)
             df.replace({'Notes:  j-Line contains hyd. jump': ''},
                        inplace=True, regex=True)
             df.replace({' j': '', '\(': '', '\)': '', ' DOUBLE': ''},

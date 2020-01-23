@@ -32,8 +32,11 @@ def spread_format(s3, S3_BUCKET, s3_keys_csv, folder_name,
                        'slope', 'spread']
             )
 
-            df.replace({'Comb.': 'COMB', 'Dp-Grate': 'GRATE', 'Hdwall': 'FES',
-                        'Offsite': 'NONE', 'Sag': 'SAG', }, inplace=True)
+            df.replace({'Outfall': 'OUT', 'Curb': 'CURB', 'Grate': 'GRATE',
+                        'Comb.': 'COMB', 'Generic': 'GENERIC', 'Hdwall': 'FES',
+                        'None': 'NONE', 'Dp-Curb': 'DP-CURB',
+                        'Dp-Grate': 'DP-GRATE', 'Null Structure': 'NONE'},
+                       inplace=True)
             df.replace({'Notes:  j-Line contains hyd. jump': ''},
                        inplace=True, regex=True)
             df.replace({' j': '', '\(': '', '\)': '', ' DOUBLE': ''},
