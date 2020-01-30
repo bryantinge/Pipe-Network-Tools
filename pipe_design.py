@@ -80,7 +80,7 @@ def design_format(s3, S3_BUCKET, s3_keys_csv, folder_name,
         max_row = ws.max_row
         max_col = ws.max_column
 
-        ws['B2'] = series_names[i] + ' SERIES (10-YEAR ANALYSIS)'
+        ws['B2'] = series_names[i] + ' (10-YEAR ANALYSIS)'
         ws['B3'] = 'INLET TYPE'
         ws['C3'] = 'STRUCTURE'
         ws['E3'] = 'A'

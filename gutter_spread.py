@@ -86,7 +86,7 @@ def spread_format(s3, S3_BUCKET, s3_keys_csv, folder_name,
         max_row = ws.max_row
         max_col = ws.max_column
 
-        ws['B2'] = series_names[i] + ' SERIES (GUTTER SPREAD)'
+        ws['B2'] = series_names[i] + ' (GUTTER SPREAD)'
         ws['B3'] = 'STRUCTURE'
         ws['C3'] = 'INLET\nTYPE'
 
