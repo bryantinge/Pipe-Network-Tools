@@ -15,7 +15,8 @@
 
 body {
   padding-top: 3.5rem;
-  background-color: #e9ecef
+  background: #f7f6fc url(../images/bg_graph.png) repeat 50% 0;
+  background-position: 0px 15px;
 }
 
 input[type='file'] {
