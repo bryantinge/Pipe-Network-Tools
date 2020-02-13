@@ -1,13 +1,8 @@
-*venv*
-*test*
+.elasticbeanstalk
 __pycache__
+scripts
+test files
+venv
 
-*.bat
 *.ebignore
-
 config.py
-
-# Elastic Beanstalk Files
-.elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
