@@ -49,9 +49,9 @@ def spread_format(s3, S3_BUCKET, s3_keys_csv, folder_name,
                 df.iloc[:, col] = pd.to_numeric(
                     df.iloc[:, col], errors='coerce')
 
+            df.loc[df.bypass == 'SAG', 'slope'] = 'SAG'
             df.loc[df.inlet_type != 'COMB', 'slope'] = 'N/A'
             df.loc[df.inlet_type != 'COMB', 'spread'] = 'N/A'
-            df.loc[df.bypass == 'SAG', 'slope'] = 'SAG'
 
             df.drop(df.columns[0], axis=1, inplace=True)
             if not bypass_toggle:
