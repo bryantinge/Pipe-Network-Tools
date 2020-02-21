@@ -228,33 +228,21 @@ def design_format(s3, S3_BUCKET, s3_keys_csv, folder_name,
         set_format(ws, '0', 5, max_row, 12, 13)
         set_format(ws, '0.00', 5, max_row, 15, max_col)
 
-        # Set row and column dimensions
-        ws.row_dimensions[1].height = 13.8
-        ws.row_dimensions[2].height = 18
-        ws.row_dimensions[3].height = 21
-        ws.row_dimensions[4].height = 21
+        # Set row dimensions
+        row_dims = {1: 13.8, 2: 18, 3: 21, 4: 21}
 
-        ws.column_dimensions['A'].width = 4.02
-        ws.column_dimensions['B'].width = 13.13
-        ws.column_dimensions['C'].width = 10.02
-        ws.column_dimensions['D'].width = 10.02
-        ws.column_dimensions['E'].width = 9.58
-        ws.column_dimensions['F'].width = 9.58
-        ws.column_dimensions['G'].width = 9.58
-        ws.column_dimensions['H'].width = 9.58
-        ws.column_dimensions['I'].width = 12.24
-        ws.column_dimensions['J'].width = 12.24
-        ws.column_dimensions['K'].width = 15.24
-        ws.column_dimensions['L'].width = 15.58
-        ws.column_dimensions['M'].width = 11.47
-        ws.column_dimensions['N'].width = 13.91
-        ws.column_dimensions['O'].width = 14.24
-        ws.column_dimensions['P'].width = 15.13
-        ws.column_dimensions['Q'].width = 15.13
-        ws.column_dimensions['R'].width = 17.24
-        ws.column_dimensions['S'].width = 17.24
-        ws.column_dimensions['T'].width = 13.8
-        ws.column_dimensions['U'].width = 13.8
+        for key, value in row_dims.items():
+            ws.row_dimensions[key].height = value
+
+        # Set column dimensions
+        col_dims = {'A': 4.02, 'B': 13.13, 'C': 10.02, 'D': 10.02, 'E': 9.58,
+                    'F': 9.58, 'G': 9.58, 'H': 9.58, 'I': 12.24, 'J': 12.24,
+                    'K': 15.24, 'L': 15.58, 'M': 11.47, 'N': 13.91, 'O': 14.24,
+                    'P': 15.13, 'Q': 15.13, 'R': 17.24, 'S': 17.24, 'T': 13.8,
+                    'U': 13.8}
+
+        for key, value in col_dims.items():
+            ws.column_dimensions[key].width = value
 
     # Convert formatted xlsx file to binary
     stream_xlsx_form = io.BytesIO()

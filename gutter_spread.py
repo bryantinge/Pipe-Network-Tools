@@ -209,26 +209,19 @@ def spread_format(s3, S3_BUCKET, s3_keys_csv, folder_name,
             set_format(ws, '0.0', 5, max_row, 5, 5)
             set_format(ws, '0.00', 5, max_row, 6, max_col)
 
-        # Set row and column dimensions
-        ws.row_dimensions[1].height = 13.8
-        ws.row_dimensions[2].height = 18
-        ws.row_dimensions[3].height = 36
-        ws.row_dimensions[4].height = 21
+        # Set row dimensions
+        row_dims = {1: 13.8, 2: 18, 3: 36, 4: 21}
 
-        ws.column_dimensions['A'].width = 4.02
-        ws.column_dimensions['B'].width = 13.98
-        ws.column_dimensions['C'].width = 11.24
-        ws.column_dimensions['D'].width = 15.36
-        ws.column_dimensions['E'].width = 13.24
-        ws.column_dimensions['F'].width = 11.13
-        ws.column_dimensions['G'].width = 11.13
-        ws.column_dimensions['H'].width = 11.13
-        ws.column_dimensions['I'].width = 13.47
-        ws.column_dimensions['J'].width = 13.47
-        ws.column_dimensions['K'].width = 13.47
-        ws.column_dimensions['L'].width = 13.47
-        ws.column_dimensions['M'].width = 13.47
-        ws.column_dimensions['N'].width = 13.47
+        for key, value in row_dims.items():
+            ws.row_dimensions[key].height = value
+
+        # Set column dimensions
+        col_dims = {'A': 4.02, 'B': 13.98, 'C': 13.24, 'D': 15.36, 'E': 13.24,
+                    'F': 11.13, 'G': 11.13, 'H': 11.13, 'I': 13.47, 'J': 13.47,
+                    'K': 13.47, 'L': 13.47, 'M': 13.47, 'N': 13.47}
+
+        for key, value in col_dims.items():
+            ws.column_dimensions[key].width = value
 
     # Convert formatted xlsx file to binary
     stream_xlsx_form = io.BytesIO()
