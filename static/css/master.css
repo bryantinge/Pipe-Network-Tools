@@ -98,6 +98,6 @@ input[type='submit'] {
 .alert-bottom {
   position: fixed;
   bottom: 8px;
-  left: 3%;
-  width: 94%;
+  left: 50%;
+  transform: translateX(-50%);
 }
